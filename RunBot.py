@@ -333,7 +333,7 @@ async def dht11(ctx):
 # Events
 @bot.event
 async def on_ready():
-	await bot.change_presence(activity=discord.Game(name="⚙️ Added &countdown"))
+	await bot.change_presence(activity=discord.Game(name="⚙️ Added &dht11"))
 	print('Started!')
 
 
