@@ -52,26 +52,15 @@ async def covid_stat(ctx, minimal=False) :
 		return resstr
 
 	tempstr = ":{}:{}{}"
-	await ctx.send("รายงานสถานการณ์ COVID-19 ในประเทศไทย\n" + datestr)
+	title = f"รายงานสถานการณ์ COVID-19 ในประเทศไทย\n {datestr}"
+	c = discord.Embed(title = f"**{title}**", color = 0x00FF00)
+	await ctx.send(embed = c)
 	final = [tempstr.format(dataformat[topic][0], blank_emoji + digits_gen(data[topic], max([len(str(abs(data[c]))) for c in list(dataformat.keys())])) + blank_emoji, digits_gen(data["New"+topic], max([len(str(abs(data["New"+c]))) for c in list(dataformat.keys())]), True, dataformat[topic][1])) for topic in list(dataformat.keys())]
 	if minimal :
 		await ctx.send("\n".join(final))
 	else :
 		for f in final :
 			await ctx.send(f)
-
-# Command
-@bot.command()
-async def welcome(ctx):
-	welcome = discord.Embed(title = "**ยินดีต้อนรับสู่ GGWP'Games Room !**", description = "ขอให้โชคดี 😀", color = 0x00FF00)
-	welcome.set_thumbnail(url="https://cdn.discordapp.com/attachments/778868879567880192/779671284786528276/Stonk.gif")
-	await ctx.send(embed = welcome)
-
-@bot.command()
-async def congrat(ctx):
-	congrat = discord.Embed(title = "**CONGRATULATION!!**", description = "ยินดีด้วย!! 🎉🎉", color = 0x00FF00)
-	congrat.set_thumbnail(url="https://cdn.discordapp.com/attachments/778868879567880192/780126909421846548/Congrat.gif")
-	await ctx.send(embed = congrat)
 
 
 # Math
@@ -90,7 +79,7 @@ async def mul(ctx, numOne: float, numTwo: float):
 	try :
 		mul = numOne * numTwo
 	except OverflowError :
-		await ctx.send("ทำไม่ได้โว้ย !!")
+		await ctx.send("เยอะเกินไป !!")
 		return
 	await ctx.send(f"{numOne} × {numTwo} = {mul}")
 
@@ -108,7 +97,7 @@ async def pow(ctx, numOne: float, numTwo: float):
 	try :
 		pow = numOne ** numTwo
 	except OverflowError :
-		await ctx.send("เยอะไปไอ้เบื๊อก !!")
+		await ctx.send("เยอะเกินไป !!")
 		return
 	await ctx.send(f"{numOne} ^ {numTwo} = {pow}")
 
@@ -119,9 +108,33 @@ async def sqrt(ctx, sqrtnum: float, number: int):
 
 @bot.command()
 async def fac(ctx, number: int):
-	fac = math.factorial(number)
+	try :
+		fac = math.factorial(number)
+	except OverflowError :
+		await ctx.send("เยอะเกินไป !!")
+		return
 	await ctx.send(f"{number}! = {fac}")
 
+
+# Command
+@bot.command()
+async def welcome(ctx):
+	welcome = discord.Embed(title = "**ยินดีต้อนรับสู่ GGWP'Games Room !**", description = "ขอให้โชคดี 😀", color = 0x00FF00)
+	welcome.set_thumbnail(url="https://cdn.discordapp.com/attachments/778868879567880192/779671284786528276/Stonk.gif")
+	await ctx.send(embed = welcome)
+
+@bot.command()
+async def congrat(ctx):
+	congrat = discord.Embed(title = "**CONGRATULATION!!**", description = "ยินดีด้วย!! 🎉🎉", color = 0x00FF00)
+	congrat.set_thumbnail(url="https://cdn.discordapp.com/attachments/778868879567880192/780126909421846548/Congrat.gif")
+	await ctx.send(embed = congrat)
+
+@bot.command()
+async def update(ctx):
+	u = discord.Embed(title = "📌 **Update**", color = 0x00FF00)
+	u.add_field(name="1️⃣ V.1.0 | 16/12/2020", value="`• Online 24/7\n• Deleted command\n• &shutdown\n• &restart\n• &pyramid\n• &ytddos\n• &square\n• &dht11`")
+	u.add_field(name="2️⃣ V.1.1 | 22/12/2020", value="`• Detele &dht11 in &help\n• Make embed for &covid\n• Fix &sqrt\n• Make Limit of &fac\n• Fix loop หวัดดี,สวัสดี\n• Deleted on_member_join`")
+	await ctx.send(embed = u)
 
 @bot.command()
 async def help(ctx):
@@ -135,7 +148,6 @@ async def help(ctx):
 	h.add_field(name="📐 สร้างสามเหลี่ยมมุมฉาก", value="`&right_triangle [จำนวนชั้น]`")
 	h.add_field(name="🔄 แปลงหน่วยอุณหภูมิ", value="`&help_temp`")
 	h.add_field(name="😷 ตรวจสอบสถานการณ์ไวรัส COVID-19", value="`&covid`")
-	h.add_field(name="🌡 ตรวจสอบอุณหภูมิและความชื้น", value="`&dht11`")
 	h.add_field(name="🔄 แปลงเปอร์เซ็นต์และตัวเลข", value="`&help_percent`")
 	h.add_field(name="🚀 โปรแกรมยิงไอพี DDoS Tool", value="`&ddosins`")
 	await ctx.send(embed = h)
@@ -148,7 +160,7 @@ async def help_math(ctx):
 	hm.add_field(name="`✖️` คูณ", value="`&mul [Num 1] [Num 2]`")
 	hm.add_field(name="`➗` หาร", value="`&div [Num 1] [Num 2]`")
 	hm.add_field(name="💪 ยกกำลัง", value="`&pow [Num 1] [Num 2]`")
-	hm.add_field(name="`√` ถอดราก", value="`&sqrt [Number] [Sqrt Num]`")
+	hm.add_field(name="`√` ถอดราก", value="`&sqrt [Sqrt Num] [Number]`")
 	hm.add_field(name="`!` แฟกทอเรียล", value="`&fac [Number]`")
 	await ctx.send(embed = hm)
 
@@ -291,13 +303,7 @@ async def on_ready():
 	await bot.change_presence(activity=discord.Game(name="⚙️ Running"))
 	print('Started!')
 
-
-@bot.event
-async def on_member_join(message):
-	await message.channel.send(f'Welcome {member.name} to {guild.name}')
-	await bot.process_commands(message)
-
-
+	
 # Listen
 @bot.listen()
 async def on_message(message):
@@ -307,10 +313,14 @@ async def on_message(message):
 	elif "สวัสดี" in message.content.lower():
 		if message.author.id == bot.user.id:
 			return
+		if message.author.id == 778302031042576395:
+			return
 		await message.channel.send('สวัสดี 🙏😀')
 
 	elif "หวัดดี" in message.content.lower():
 		if message.author.id == bot.user.id:
+			return
+		if message.author.id == 778302031042576395:
 			return
 		await message.channel.send('หวัดดี 🙏😀')
 
