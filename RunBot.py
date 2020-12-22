@@ -140,6 +140,7 @@ async def update(ctx):
 async def help(ctx):
 	h = discord.Embed(title = "❔ **Help**", color = 0x00FF00)
 	h.add_field(name="ℹ️ ข้อมูลกลุ่ม", value="`&guild`")
+	h.add_field(name="📌 ข้อมูลอัปเดท", value="`&update`")
 	h.add_field(name="🙏 ข้อความต้อนรับ", value="`&welcome`")
 	h.add_field(name="🎉 ข้อความยินดี", value="`&congrat`")
 	h.add_field(name="📩 เชิญบอท", value="`&invite`")
