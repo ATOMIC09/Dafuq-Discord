@@ -132,8 +132,10 @@ async def congrat(ctx):
 @bot.command()
 async def update(ctx):
 	u = discord.Embed(title = "📌 **Update**", color = 0x00FF00)
-	u.add_field(name="1️⃣ V.1.0 | 16/12/2020", value="`• Online 24/7\n• Deleted command\n• &shutdown\n• &restart\n• &pyramid\n• &ytddos\n• &square\n• &dht11`")
-	u.add_field(name="2️⃣ V.1.1 | 22/12/2020", value="`• Detele &dht11 in &help\n• Make embed for &covid\n• Fix &sqrt\n• Make Limit of &fac\n• Fix loop หวัดดี,สวัสดี\n• Deleted on_member_join\n• Added &update`")
+	u.add_field(name="1️⃣ V.1.0.0 | 16/12/2020", value="`• Status: Online 24/7\n• Delete: &shutdown\n• Delete: &restart\n• Delete: &pyramid\n• Delete: &yt\n• Delete: &ddos\n• Delete: &square\n• Delete: &dht11
+")
+	u.add_field(name="2️⃣ V.1.1.0 | 22/12/2020", value="`• Delete: &dht11 in &help\n• Delete: on_member_join\n• Add: &update\n• Add: Embed for &covid\n• Add: Limit of &fac\n• Fix: &sqrt\n• Fix: Loop หวัดดี,สวัสดี`")
+	u.add_field(name="2️⃣ V.1.1.1 | 25/12/2020", value="`• Delete: Some auto detection word`")
 	await ctx.send(embed = u)
 
 @bot.command()
@@ -308,10 +310,7 @@ async def on_ready():
 # Listen
 @bot.listen()
 async def on_message(message):
-	if "fuck" in message.content.lower():
-		await message.channel.send('Hey!')
-
-	elif "สวัสดี" in message.content.lower():
+	if "สวัสดี" in message.content.lower():
 		if message.author.id == bot.user.id:
 			return
 		if message.author.id == 778302031042576395:
@@ -324,21 +323,6 @@ async def on_message(message):
 		if message.author.id == 778302031042576395:
 			return
 		await message.channel.send('หวัดดี 🙏😀')
-
-	elif "okay" in message.content.lower():
-		await message.channel.send('hmmmmmm🤔')
-
-	elif "shut up" in message.content.lower():
-		await message.channel.send("👌 if you did't say it again")
-
-	elif "เห้ย" in message.content.lower():
-		await message.channel.send('ไรหยอ 🤨')
-
-	elif "wtf" in message.content.lower():
-		await message.channel.send('...')
-
-	elif "rip" in message.content.lower():
-		await message.channel.send('F')
 
 	elif "ยินดีด้วย" in message.content.lower():
 		await message.channel.send('ขอแสดงความยินดี! 🎉🎉')
