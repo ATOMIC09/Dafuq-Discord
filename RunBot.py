@@ -132,8 +132,7 @@ async def congrat(ctx):
 @bot.command()
 async def update(ctx):
 	u = discord.Embed(title = "📌 **Update**", color = 0x00FF00)
-	u.add_field(name="1️⃣ V.1.0.0 | 16/12/2020", value="`• Status: Online 24/7\n• Delete: &shutdown\n• Delete: &restart\n• Delete: &pyramid\n• Delete: &yt\n• Delete: &ddos\n• Delete: &square\n• Delete: &dht11
-")
+	u.add_field(name="1️⃣ V.1.0.0 | 16/12/2020", value="`• Status: Online 24/7\n• Delete: &shutdown\n• Delete: &restart\n• Delete: &pyramid\n• Delete: &yt\n• Delete: &ddos\n• Delete: &square\n• Delete: &dht11`")
 	u.add_field(name="2️⃣ V.1.1.0 | 22/12/2020", value="`• Delete: &dht11 in &help\n• Delete: on_member_join\n• Add: &update\n• Add: Embed for &covid\n• Add: Limit of &fac\n• Fix: &sqrt\n• Fix: Loop หวัดดี,สวัสดี`")
 	u.add_field(name="2️⃣ V.1.1.1 | 25/12/2020", value="`• Delete: Some auto detection word`")
 	await ctx.send(embed = u)
