@@ -134,8 +134,9 @@ async def update(ctx):
 	u = discord.Embed(title = "📌 **Update**", color = 0x00FF00)
 	u.add_field(name="1️⃣ V.1.0.0 | 16/12/2020", value="`• Status: Online 24/7\n• Delete: &shutdown\n• Delete: &restart\n• Delete: &pyramid\n• Delete: &yt\n• Delete: &ddos\n• Delete: &square\n• Delete: &dht11`")
 	u.add_field(name="2️⃣ V.1.1.0 | 22/12/2020", value="`• Delete: &dht11 in &help\n• Delete: on_member_join\n• Add: &update\n• Add: Embed for &covid\n• Add: Limit of &fac\n• Fix: &sqrt\n• Fix: Loop หวัดดี,สวัสดี`")
-	u.add_field(name="3️⃣ V.1.1.1 | 25/12/2020", value="`• Delete: Some auto detection word`")
-	u.add_field(name="4️⃣ V.1.2.0 | 01/03/2021", value="`• Add: Reaction Role Assignment`")
+	u.add_field(name="3️⃣ V.1.1.1 | 25/12/2020", value="`• Delete: Some auto detection word\nFix: Decimal number limit`")
+	u.add_field(name="4️⃣ V.1.2.0 | 01/02/2021", value="`• Add: Reaction Role Assignment`")
+	u.add_field(name="5️⃣ V.1.3.0 | 23/04/2021", value="`• Fix: &countdown\nAdd: &event`")
 	await ctx.send(embed = u)
 
 @bot.command()
@@ -148,11 +149,13 @@ async def help(ctx):
 	h.add_field(name="📩 เชิญบอท", value="`&invite`")
 	h.add_field(name="⚙️ คำนวณเลข", value="`&help_math`")
 	h.add_field(name="⏲️ เคานต์ดาวน์", value="`&countdown [เวลา]`")
+	h.add_field(name="⏹ หยุดการนับเคานต์ดาวน์", value="`&cancel`")
 	h.add_field(name="📐 สร้างสามเหลี่ยมมุมฉาก", value="`&right_triangle [จำนวนชั้น]`")
 	h.add_field(name="🔄 แปลงหน่วยอุณหภูมิ", value="`&help_temp`")
 	h.add_field(name="😷 ตรวจสอบสถานการณ์ไวรัส COVID-19", value="`&covid`")
 	h.add_field(name="🔄 แปลงเปอร์เซ็นต์และตัวเลข", value="`&help_percent`")
 	h.add_field(name="🚀 โปรแกรมยิงไอพี DDoS Tool", value="`&ddosins`")
+	h.add_field(name="🎆 ประกาศอีเวนต์", value="`&event [ID]|[ชื่อ]|[คำอธิบาย]|[LOGO URL]`")
 	await ctx.send(embed = h)
 
 @bot.command()
@@ -201,7 +204,6 @@ async def guild(ctx):
 	await ctx.send(embed=embed)
 
 
-# Temp
 @bot.command()
 async def ctf(ctx, tempc: float):
 	await ctx.send(str("{:.2f}".format(((9*tempc)/5)+32) + ' °F'))
@@ -236,6 +238,7 @@ async def covid(ctx) :
 	else :
 		await covid_stat(ctx)
 
+
 @bot.command()
 async def right_triangle(ctx, size: int):
 	result = ""
@@ -244,7 +247,6 @@ async def right_triangle(ctx, size: int):
 	await ctx.send(result)
 
 
-# Percent
 @bot.command()
 async def ptn(ctx, percent: float, total: float):
 	ptn_result = (percent/100)*total
@@ -255,6 +257,7 @@ async def ntp(ctx, number:float, total:float):
 	ntp_result = (number/total)*100
 	await ctx.send(f'{number} of {total} = {ntp_result}%')
 
+
 @bot.command()
 async def ddosins(ctx):
 	ddos = discord.Embed(title = "🚀 **DDoS Tool V1.0**", color = 0x00FF00)
@@ -262,11 +265,13 @@ async def ddosins(ctx):
 	ddos.set_thumbnail(url="https://cdn.discordapp.com/attachments/778868879567880192/781516216987680788/DDoS_LOGO.jpg")
 	await ctx.send(embed = ddos)
 
+
 @bot.command()
 async def send(ctx, id, *, text):
 	if 269000561255383040 == ctx.message.author.id :
 		channel = ctx.bot.get_channel(int(id))
 		await channel.send(text)
+
 
 @bot.command()
 async def invite(ctx):
@@ -287,30 +292,83 @@ async def addrole(ctx, id):
 		await channel.send(embed = a)
 
 
-# Countdown
 @bot.command()
-async def countdown(ctx, time: int):
-	if time > 120 :
-		await ctx.send("ไม่สามารถทำได้ เนื่องจากมีความเสี่ยงที่จะปิดบอทไม่ทัน")
-	else :
-		while time > 1:
-			time = time - 1
-			await ctx.send(f"Time remaining: {time} seconds")
+async def event(ctx, *, text):
+	list1 = []
+	list1 = text.split('|')
+	id = list1[0]
+	title = list1[1]
+	date = list1[2]
+	url = list1[3]
+	
+
+	show = discord.Embed(title = "**EVENT** 🎆", color = 0x00FF00)
+	show.set_thumbnail(url=url)
+	show.add_field(name=title, value=date)
+
+	channel = ctx.bot.get_channel(int(id))
+	await channel.send(embed = show)
+
+
+# Countdown
+bot.cancel_code = 0
+
+@bot.command()
+async def countdown(ctx, timer: int):
+	while bot.cancel_code == 0:
+		day = int(timer / 86400)
+		sade = int(timer % 86400)
+		hour = int(sade / 3600)
+		sade2 = int(sade % 3600)
+		minute = int(sade2 / 60)
+		second = int(sade2 % 60)
+
+		#ปรับขนาดตัวอักษร
+		day_str = str(day)
+		hour_str = str(hour)
+		minute_str = str(minute)
+		second_str = str(second)
+
+		day_zfill = day_str.zfill(2)
+		hour_zfill = hour_str.zfill(2)
+		minute_zfill = minute_str.zfill(2)
+		second_zfill = second_str.zfill(2)
+
+		message = await ctx.send(f"Time remaining: **{day_zfill}:{hour_zfill}:{minute_zfill}:{second_zfill}**")
+
+		while timer > 1:
+			day = int(timer / 86400)
+			sade = int(timer % 86400)
+			hour = int(sade / 3600)
+			sade2 = int(sade % 3600)
+			minute = int(sade2 / 60)
+			second = int(sade2 % 60)
+
+			#ปรับขนาดตัวอักษร
+			day_str = str(day)
+			hour_str = str(hour)
+			minute_str = str(minute)
+			second_str = str(second)
+
+			day_zfill = day_str.zfill(2)
+			hour_zfill = hour_str.zfill(2)
+			minute_zfill = minute_str.zfill(2)
+			second_zfill = second_str.zfill(2)
+
+			timer -= 1
+			await message.edit(content=f"Time remaining: **{day_zfill}:{hour_zfill}:{minute_zfill}:{second_zfill}**")
 			sleep(1)
 
-@bot.command()			
-async def forcecountdown(ctx, time:int):
-	if 269000561255383040 == ctx.message.author.id :
-		while time > 1:
-				time = time - 1
-				await ctx.send(f"Time remaining: {time} seconds")
-				sleep(1)	
+		if timer == 1:
+			sleep(1)
+			await message.edit(content="Time remaining: **Time Up !!**")	
 
-@bot.listen()
-async def on_message(message):
-	if " 1 seconds" in message.content.lower():
-		if message.author.id == bot.user.id:
-			await message.channel.send('Time Up !!')
+		
+				
+@bot.command()			
+async def cancel(ctx):
+	bot.cancel_code += 1
+	await ctx.send("⏹ Canceled")
 
 
 # Events
