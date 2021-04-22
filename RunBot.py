@@ -203,27 +203,27 @@ async def guild(ctx):
 # Temp
 @bot.command()
 async def ctf(ctx, tempc: float):
-	await ctx.send(str(((9*tempc)/5)+32) + ' °F')
+	await ctx.send(str("{:.2f}".format(((9*tempc)/5)+32) + ' °F'))
 
 @bot.command()
 async def ftc(ctx, tempf: float):
-	await ctx.send(str(((tempf-32)/9)*5) + ' °C')
+	await ctx.send(str("{:.2f}".format((((tempf-32)/9)*5)) + ' °C'))
 
 @bot.command()
 async def ctk(ctx, tempc: float):
-	await ctx.send(str(tempc+273) + ' K')
+	await ctx.send(str("{:.2f}".format((tempc+273)) + ' K'))
 
 @bot.command()
 async def ktc(ctx, tempk: float):
-	await ctx.send(str(tempk-273) + ' °C')
+	await ctx.send(str("{:.2f}".format((tempk-273)) + ' °C'))
 
 @bot.command()
 async def ftk(ctx, tempf: float):
-	await ctx.send(str(((5*(tempf-32))/9)+273) + ' K')
+	await ctx.send(str("{:.2f}".format((((5*(tempf-32))/9)+273)) + ' K'))
 
 @bot.command()
 async def ktf(ctx, tempk: float):
-	await ctx.send(str((((tempk-273)*9)/5)+32) + ' °F')
+	await ctx.send(str("{:.2f}".format((((tempk-273)*9)/5)+32) + ' °F'))
 
 
 @bot.command()
