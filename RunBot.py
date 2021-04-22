@@ -374,7 +374,7 @@ async def cancel(ctx):
 # Events
 @bot.event
 async def on_ready():
-	await bot.change_presence(activity=discord.Game(name="⚙️RunningㅣVersion 1.2.0"))
+	await bot.change_presence(activity=discord.Game(name="ℹ️ Version 1.3.0"))
 	print('Started!')
 
 
