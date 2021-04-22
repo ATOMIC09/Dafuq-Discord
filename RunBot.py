@@ -135,6 +135,7 @@ async def update(ctx):
 	u.add_field(name="1️⃣ V.1.0.0 | 16/12/2020", value="`• Status: Online 24/7\n• Delete: &shutdown\n• Delete: &restart\n• Delete: &pyramid\n• Delete: &yt\n• Delete: &ddos\n• Delete: &square\n• Delete: &dht11`")
 	u.add_field(name="2️⃣ V.1.1.0 | 22/12/2020", value="`• Delete: &dht11 in &help\n• Delete: on_member_join\n• Add: &update\n• Add: Embed for &covid\n• Add: Limit of &fac\n• Fix: &sqrt\n• Fix: Loop หวัดดี,สวัสดี`")
 	u.add_field(name="3️⃣ V.1.1.1 | 25/12/2020", value="`• Delete: Some auto detection word`")
+	u.add_field(name="4️⃣ V.1.2.0 | 01/03/2021", value="`• Add: Reaction Role Assignment`")
 	await ctx.send(embed = u)
 
 @bot.command()
@@ -270,8 +271,21 @@ async def send(ctx, id, *, text):
 @bot.command()
 async def invite(ctx):
 	invite = discord.Embed(title = "📩 **เชิญบอท**", color = 0x00FF00)
-	invite.description ="[Click Here](https://discord.com/oauth2/authorize?client_id=778302031042576395&permissions=247872&scope=bot)"
+	invite.description = "[Click Here](https://discord.com/oauth2/authorize?client_id=778302031042576395&permissions=247872&scope=bot)"
 	await ctx.send(embed = invite)
+
+
+@bot.command()
+async def addrole(ctx, id):
+	a = discord.Embed(title = "📝 **React me to assign the role**", color = 0x00FF00)
+	a.add_field(name="**🎮 Game**", value="`0️⃣1️⃣ㅣคณะล่าผี\n0️⃣2️⃣ㅣGenshin Impact\n0️⃣3️⃣ㅣMicrosoft Flight Simulator\n0️⃣4️⃣ㅣFar Cry\n0️⃣5️⃣ㅣDead by Daylight\n0️⃣6️⃣ㅣRainbow Six Siege\n0️⃣7️⃣ㅣForza Horizon 4\n0️⃣8️⃣ㅣLeague of Legends\n0️⃣9️⃣ㅣPUBG\n1️⃣0️⃣ㅣValorant\n1️⃣1️⃣ㅣMinecraft\n1️⃣2️⃣ㅣRoblox`")
+	a.add_field(name="**🏫 School**", value="`1️⃣3️⃣ㅣSKR#24ㅣ503\n1️⃣4️⃣ㅣSKR#24ㅣ505\n1️⃣5️⃣ㅣSKR#24ㅣ509\n1️⃣6️⃣ㅣSKR#24ㅣ510\n1️⃣7️⃣ㅣSKR#24ㅣ511\n1️⃣8️⃣ㅣSKR#24ㅣ512`")
+	a.add_field(name="**💡 Other**", value="`1️⃣9️⃣ㅣนักตัดงานคุณภาพ\n2️⃣0️⃣ㅣเสพกาววีทูปเบอร์\n2️⃣1️⃣ㅣSportsman`")
+
+	if 269000561255383040 == ctx.message.author.id :
+		channel = ctx.bot.get_channel(int(id))
+		await channel.send(embed = a)
+
 
 # Countdown
 @bot.command()
@@ -302,8 +316,133 @@ async def on_message(message):
 # Events
 @bot.event
 async def on_ready():
-	await bot.change_presence(activity=discord.Game(name="⚙️ Running"))
+	await bot.change_presence(activity=discord.Game(name="⚙️RunningㅣVersion 1.2.0"))
 	print('Started!')
+
+
+@bot.event
+async def on_raw_reaction_add(payload):
+	message_id = payload.message_id
+	if message_id == 815987372646334475:
+		guild_id = payload.guild_id
+		guild = discord.utils.find(lambda g : g.id == guild_id, bot.guilds)
+
+		if payload.emoji.name == '1_':
+			role = discord.utils.get(guild.roles, name = 'คณะล่าผี')
+		elif payload.emoji.name == '2_':
+			role = discord.utils.get(guild.roles, name = 'Genshin Impact')
+		elif payload.emoji.name == '3_':
+			role = discord.utils.get(guild.roles, name = 'Microsoft Flight Simulator')
+		elif payload.emoji.name == '4_':
+			role = discord.utils.get(guild.roles, name = 'Far Cry')
+		elif payload.emoji.name == '5_':
+			role = discord.utils.get(guild.roles, name = 'Dead by Daylight')
+		elif payload.emoji.name == '6_':
+			role = discord.utils.get(guild.roles, name = 'Rainbow Six Siege')
+		elif payload.emoji.name == '7_':
+			role = discord.utils.get(guild.roles, name = 'Forza Horizon 4')
+		elif payload.emoji.name == '8_':
+			role = discord.utils.get(guild.roles, name = 'League of Legends')
+		elif payload.emoji.name == '9_':
+			role = discord.utils.get(guild.roles, name = 'PUBG')
+		elif payload.emoji.name == '10_':
+			role = discord.utils.get(guild.roles, name = 'Valorant')
+		elif payload.emoji.name == '11_':
+			role = discord.utils.get(guild.roles, name = 'Minecraft')
+		elif payload.emoji.name == '12_':
+			role = discord.utils.get(guild.roles, name = 'Roblox')
+		elif payload.emoji.name == '13_':
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ503')
+		elif payload.emoji.name == '14_':
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ505')
+		elif payload.emoji.name == '15_':
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ509')
+		elif payload.emoji.name == '16_':
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ510')
+		elif payload.emoji.name == '17_':
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ511')
+		elif payload.emoji.name == '18_':
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ512')
+		elif payload.emoji.name == '19_':
+			role = discord.utils.get(guild.roles, name = 'นักตัดงานคุณภาพ')
+		elif payload.emoji.name == '20_':
+			role = discord.utils.get(guild.roles, name = 'เสพกาววีทูปเบอร์')
+		elif payload.emoji.name == '21_':
+			role = discord.utils.get(guild.roles, name = 'Sportsman')
+		else:
+			role = discord.utils.get(guild.roles, name = payload.emoji.name)
+
+		if role is not None:
+			member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)
+			if member is not None:
+				await member.add_roles(role)
+				print("Role Add Done")
+			else:
+				print("Member not found")
+		else:
+			print("Role not found")
+
+@bot.event
+async def on_raw_reaction_remove(payload):
+	message_id = payload.message_id
+	if message_id == 815987372646334475:
+		guild_id = payload.guild_id
+		guild = discord.utils.find(lambda g : g.id == guild_id, bot.guilds)
+
+		if payload.emoji.name == '1_':
+			role = discord.utils.get(guild.roles, name = 'คณะล่าผี')
+		elif payload.emoji.name == '2_':
+			role = discord.utils.get(guild.roles, name = 'Genshin Impact')
+		elif payload.emoji.name == '3_':
+			role = discord.utils.get(guild.roles, name = 'Microsoft Flight Simulator')
+		elif payload.emoji.name == '4_':
+			role = discord.utils.get(guild.roles, name = 'Far Cry')
+		elif payload.emoji.name == '5_':
+			role = discord.utils.get(guild.roles, name = 'Dead by Daylight')
+		elif payload.emoji.name == '6_':
+			role = discord.utils.get(guild.roles, name = 'Rainbow Six Siege')
+		elif payload.emoji.name == '7_':
+			role = discord.utils.get(guild.roles, name = 'Forza Horizon 4')
+		elif payload.emoji.name == '8_':
+			role = discord.utils.get(guild.roles, name = 'League of Legends')
+		elif payload.emoji.name == '9_':
+			role = discord.utils.get(guild.roles, name = 'PUBG')
+		elif payload.emoji.name == '10_':
+			role = discord.utils.get(guild.roles, name = 'Valorant')
+		elif payload.emoji.name == '11_':
+			role = discord.utils.get(guild.roles, name = 'Minecraft')
+		elif payload.emoji.name == '12_':
+			role = discord.utils.get(guild.roles, name = 'Roblox')
+		elif payload.emoji.name == '13_':
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ503')
+		elif payload.emoji.name == '14_':
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ505')
+		elif payload.emoji.name == '15_':
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ509')
+		elif payload.emoji.name == '16_':
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ510')
+		elif payload.emoji.name == '17_':
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ511')
+		elif payload.emoji.name == '18_':
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ512')
+		elif payload.emoji.name == '19_':
+			role = discord.utils.get(guild.roles, name = 'นักตัดงานคุณภาพ')
+		elif payload.emoji.name == '20_':
+			role = discord.utils.get(guild.roles, name = 'เสพกาววีทูปเบอร์')
+		elif payload.emoji.name == '21_':
+			role = discord.utils.get(guild.roles, name = 'Sportsman')
+		else:
+			role = discord.utils.get(guild.roles, name = payload.emoji.name)
+
+		if role is not None:
+			member = discord.utils.find(lambda m : m.id == payload.user_id, guild.members)
+			if member is not None:
+				await member.remove_roles(role)
+				print("Role Remove Done")
+			else:
+				print("Member is not found")
+		else:
+			print("Role is not found")
 
 	
 # Listen
