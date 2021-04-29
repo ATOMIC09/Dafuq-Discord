@@ -125,7 +125,7 @@ async def devmode_on(ctx):
 	if bot.devmode == 0 and 269000561255383040 == ctx.message.author.id:
 		bot.devmode += 1
 		await ctx.send("**DevMode: ON ✅**")
-		await bot.change_presence(activity=discord.Game(name="Version: Dev 1.3.0"))
+		await bot.change_presence(activity=discord.Game(name="Version: Dev 1.3.1"))
 	else:
 		await ctx.send("**Developer Mode is already ON ✅**")
 
@@ -134,7 +134,7 @@ async def devmode_off(ctx):
 	if bot.devmode == 1 and 269000561255383040 == ctx.message.author.id:
 		bot.devmode -= 1
 		await ctx.send("**DevMode: OFF ❎**")
-		await bot.change_presence(activity=discord.Game(name="Version: 1.3.0"))
+		await bot.change_presence(activity=discord.Game(name="Version: 1.3.1"))
 	else:
 		await ctx.send("**Developer Mode is already OFF ❎**")
 
@@ -335,12 +335,34 @@ async def event(ctx, *, text):
 
 # Countdown
 bot.cancel_code = 0
+bot.timer_new = 0
 
 @bot.command()
 async def countdown(ctx, timer: int):
-	if bot.cancel_code == 0:
-		day = int(timer / 86400)
-		sade = int(timer % 86400)
+	bot.timer_new = timer
+	day = int(bot.timer_new / 86400)
+	sade = int(bot.timer_new % 86400)
+	hour = int(sade / 3600)
+	sade2 = int(sade % 3600)
+	minute = int(sade2 / 60)
+	second = int(sade2 % 60)
+
+	#ปรับขนาดตัวอักษร
+	day_str = str(day)
+	hour_str = str(hour)
+	minute_str = str(minute)
+	second_str = str(second)
+
+	day_zfill = day_str.zfill(2)
+	hour_zfill = hour_str.zfill(2)
+	minute_zfill = minute_str.zfill(2)
+	second_zfill = second_str.zfill(2)
+
+	message = await ctx.send(f"Time remaining: **{day_zfill}:{hour_zfill}:{minute_zfill}:{second_zfill}**")
+
+	while bot.timer_new >= 0:
+		day = int(bot.timer_new / 86400)
+		sade = int(bot.timer_new % 86400)
 		hour = int(sade / 3600)
 		sade2 = int(sade % 3600)
 		minute = int(sade2 / 60)
@@ -357,56 +379,23 @@ async def countdown(ctx, timer: int):
 		minute_zfill = minute_str.zfill(2)
 		second_zfill = second_str.zfill(2)
 
-		message = await ctx.send(f"Time remaining: **{day_zfill}:{hour_zfill}:{minute_zfill}:{second_zfill}**")
-
-		while timer >= 0:
-			if bot.cancel_code == 0:
-				day = int(timer / 86400)
-				sade = int(timer % 86400)
-				hour = int(sade / 3600)
-				sade2 = int(sade % 3600)
-				minute = int(sade2 / 60)
-				second = int(sade2 % 60)
-
-				#ปรับขนาดตัวอักษร
-				day_str = str(day)
-				hour_str = str(hour)
-				minute_str = str(minute)
-				second_str = str(second)
-
-				day_zfill = day_str.zfill(2)
-				hour_zfill = hour_str.zfill(2)
-				minute_zfill = minute_str.zfill(2)
-				second_zfill = second_str.zfill(2)
-
 				
-				await message.edit(content=f"Time remaining: **{day_zfill}:{hour_zfill}:{minute_zfill}:{second_zfill}**")
-				await asyncio.sleep(1)
-				timer -= 1
+		await message.edit(content=f"Time remaining: **{day_zfill}:{hour_zfill}:{minute_zfill}:{second_zfill}**")
+		await asyncio.sleep(1)
+		bot.timer_new -= 1
 
-			if timer == 0:
-				await message.edit(content="Time remaining: **Time Up !!**")
-				return
+		if bot.timer_new == 0:
+			await message.edit(content="Time remaining: **Time Up !!**")
 
-
-	else:
-		return
+	if bot.timer_new < -5:
+		await message.edit(content="Time remaining: **STOPPED !!**")
 
 		
 				
 @bot.command()			
 async def cancel(ctx):
-	bot.cancel_code += 1
+	bot.timer_new = -1020304
 	await ctx.send("⏹ Canceled")
-	await asyncio.sleep(1)
-	bot.cancel_code -= 1
-
-@bot.command()			
-async def cancel_code(ctx):
-	if bot.devmode == 1:
-		await ctx.send(f"bot.cancel_code : {bot.cancel_code}")
-	else:
-		await ctx.send("**Developer Mode is OFF ❎**")
 
 
 # Events
@@ -420,7 +409,7 @@ async def status(ctx, text: str):
 
 @bot.event
 async def on_ready():
-	await bot.change_presence(activity=discord.Game(name="Version 1.3.0"))
+	await bot.change_presence(activity=discord.Game(name="Version 1.3.1"))
 	print('Started!')
 
 
