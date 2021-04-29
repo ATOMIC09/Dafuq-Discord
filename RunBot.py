@@ -6,6 +6,7 @@ import requests
 from time import sleep
 import math
 import os
+import asyncio
 
 
 intents = discord.Intents.default()
