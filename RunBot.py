@@ -384,10 +384,10 @@ async def countdown(ctx, timer: int):
 		await asyncio.sleep(1)
 		bot.timer_new -= 1
 
-		if bot.timer_new == 0:
-			await message.edit(content="Time remaining: **Time Up !!**")
+	if bot.timer_new <= 1 and bot.timer_new >= -3:
+		await message.edit(content="Time remaining: **Time Up !!**")
 
-	if bot.timer_new < -5:
+	elif bot.timer_new < -5:
 		await message.edit(content="Time remaining: **STOPPED !!**")
 
 		
