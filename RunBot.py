@@ -80,7 +80,7 @@ async def mul(ctx, numOne: float, numTwo: float):
 	try :
 		mul = numOne * numTwo
 	except OverflowError :
-		await ctx.send("เยอะเกินไป !!")
+		await ctx.send("**Error ⚠️**")
 		return
 	await ctx.send(f"{numOne} × {numTwo} = {mul}")
 
@@ -89,7 +89,7 @@ async def div(ctx, numOne: float, numTwo: float):
 	try :
 		div = numOne / numTwo
 	except ZeroDivisionError :
-		await ctx.send("ผิดหลักคณิตศาสตร์ !!")
+		await ctx.send("**Error ⚠️**")
 		return
 	await ctx.send(f"{numOne} ÷ {numTwo} = {div}")	
 
@@ -98,7 +98,7 @@ async def pow(ctx, numOne: float, numTwo: float):
 	try :
 		pow = numOne ** numTwo
 	except OverflowError :
-		await ctx.send("เยอะเกินไป !!")
+		await ctx.send("**Error ⚠️**")
 		return
 	await ctx.send(f"{numOne} ^ {numTwo} = {pow}")
 
@@ -112,7 +112,7 @@ async def fac(ctx, number: int):
 	try :
 		fac = math.factorial(number)
 	except OverflowError :
-		await ctx.send("เยอะเกินไป !!")
+		await ctx.send("**Error ⚠️**")
 		return
 	await ctx.send(f"{number}! = {fac}")
 
@@ -127,7 +127,7 @@ async def devmode_on(ctx):
 		await ctx.send("**DevMode: ON ✅**")
 		await bot.change_presence(activity=discord.Game(name="Version: Dev 1.3.1"))
 	else:
-		await ctx.send("**Developer Mode is already ON ✅**")
+		await ctx.send("**Developer Mode is already ON**")
 
 @bot.command()
 async def devmode_off(ctx):
@@ -136,7 +136,7 @@ async def devmode_off(ctx):
 		await ctx.send("**DevMode: OFF ❎**")
 		await bot.change_presence(activity=discord.Game(name="Version: 1.3.1"))
 	else:
-		await ctx.send("**Developer Mode is already OFF ❎**")
+		await ctx.send("**Developer Mode is already OFF**")
 
 
 @bot.command()
