@@ -339,6 +339,10 @@ bot.timer_new = 0
 
 @bot.command()
 async def countdown(ctx, timer: int):
+	if timer <= 0:
+		await ctx.send("Invalid Timer!")
+		return
+
 	bot.timer_new = timer
 	day = int(bot.timer_new / 86400)
 	sade = int(bot.timer_new % 86400)
