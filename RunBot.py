@@ -125,7 +125,7 @@ async def devmode_on(ctx):
 	if bot.devmode == 0 and 269000561255383040 == ctx.message.author.id:
 		bot.devmode += 1
 		await ctx.send("**DevMode: ON ✅**")
-		await bot.change_presence(activity=discord.Game(name="Version: Dev 1.3.1"))
+		await bot.change_presence(activity=discord.Game(name="Version: Dev 1.4.0"))
 	else:
 		await ctx.send("**Developer Mode is already ON**")
 
@@ -134,7 +134,7 @@ async def devmode_off(ctx):
 	if bot.devmode == 1 and 269000561255383040 == ctx.message.author.id:
 		bot.devmode -= 1
 		await ctx.send("**DevMode: OFF ❎**")
-		await bot.change_presence(activity=discord.Game(name="Version: 1.3.1"))
+		await bot.change_presence(activity=discord.Game(name="Version: 1.4.0"))
 	else:
 		await ctx.send("**Developer Mode is already OFF**")
 
@@ -160,6 +160,7 @@ async def update(ctx):
 	u.add_field(name="4️⃣ V.1.2.0 | 01/02/2021", value="`• Add: Reaction Role Assignment`")
 	u.add_field(name="5️⃣ V.1.3.0 | 23/04/2021", value="`• Add: &event\n• Fix: &countdown`")
 	u.add_field(name="6️⃣ V.1.3.1 | 29/04/2021", value="`• Add: &devmode\n• Add: &status\n• Fix: Activity Name\n• Fix: &countdown`")
+	u.add_field(name="7️⃣ V.1.4.0 | 06/06/2021", value="`• Add: PrivateKey Role assignment\n• Add: Moderator Role assignment\n• Add: Whitelist\n• Fix: Role Name`")
 	await ctx.send(embed = u)
 
 @bot.command()
@@ -172,7 +173,11 @@ async def help(ctx):
 	h.add_field(name="📩 เชิญบอท", value="`&invite`")
 	h.add_field(name="⚙️ คำนวณเลข", value="`&help_math`")
 	h.add_field(name="⏲️ เคานต์ดาวน์", value="`&countdown [เวลา]`")
-	h.add_field(name="⏹ หยุดการนับเคานต์ดาวน์", value="`&cancel`")
+	h.add_field(name="⏹ หยุดการนับเคานต์ดาวน์", value="`&cancel_countdown`")
+	h.add_field(name="🔑 ให้ PrivateKey", value="`&privatekey [@USER]`")
+	h.add_field(name="🔒 ยกเลิก PrivateKey", value="`&cancel_privatekey`")
+	h.add_field(name="🎟 เป็น Moderator", value="`&moderator`")
+	h.add_field(name="🧺 ยกเลิกสิทธิ Moderator", value="`&cancel_moderator`")
 	h.add_field(name="📐 สร้างสามเหลี่ยมมุมฉาก", value="`&right_triangle [จำนวนชั้น]`")
 	h.add_field(name="🔄 แปลงหน่วยอุณหภูมิ", value="`&help_temp`")
 	h.add_field(name="😷 ตรวจสอบสถานการณ์ไวรัส COVID-19", value="`&covid`")
@@ -307,7 +312,7 @@ async def invite(ctx):
 async def addrole(ctx, id):
 	a = discord.Embed(title = "📝 **React me to assign the role**", color = 0x00FF00)
 	a.add_field(name="**🎮 Game**", value="`0️⃣1️⃣ㅣคณะล่าผี\n0️⃣2️⃣ㅣGenshin Impact\n0️⃣3️⃣ㅣMicrosoft Flight Simulator\n0️⃣4️⃣ㅣFar Cry\n0️⃣5️⃣ㅣDead by Daylight\n0️⃣6️⃣ㅣRainbow Six Siege\n0️⃣7️⃣ㅣForza Horizon 4\n0️⃣8️⃣ㅣLeague of Legends\n0️⃣9️⃣ㅣPUBG\n1️⃣0️⃣ㅣValorant\n1️⃣1️⃣ㅣMinecraft\n1️⃣2️⃣ㅣRoblox`")
-	a.add_field(name="**🏫 School**", value="`1️⃣3️⃣ㅣSKR#24ㅣ503\n1️⃣4️⃣ㅣSKR#24ㅣ505\n1️⃣5️⃣ㅣSKR#24ㅣ509\n1️⃣6️⃣ㅣSKR#24ㅣ510\n1️⃣7️⃣ㅣSKR#24ㅣ511\n1️⃣8️⃣ㅣSKR#24ㅣ512`")
+	a.add_field(name="**🏫 School**", value="`1️⃣3️⃣ㅣSKR#24ㅣ603\n1️⃣4️⃣ㅣSKR#24ㅣ604\n1️⃣5️⃣ㅣSKR#24ㅣ605\n1️⃣6️⃣ㅣSKR#24ㅣ609\n1️⃣7️⃣ㅣSKR#24ㅣ610\n1️⃣8️⃣ㅣSKR#24ㅣ611`")
 	a.add_field(name="**💡 Other**", value="`1️⃣9️⃣ㅣนักตัดงานคุณภาพ\n2️⃣0️⃣ㅣเสพกาววีทูปเบอร์\n2️⃣1️⃣ㅣSportsman`")
 
 	if 269000561255383040 == ctx.message.author.id :
@@ -397,9 +402,196 @@ async def countdown(ctx, timer: int):
 		
 				
 @bot.command()			
-async def cancel(ctx):
+async def cancel_countdown(ctx):
 	bot.timer_new = -1020304
 	await ctx.send("⏹ Canceled")
+
+bot.whitelist_list = []
+
+@bot.command()
+async def whitelist_add(ctx, user: discord.Member):
+	if bot.devmode == 1:
+		try:	
+			list1 = bot.whitelist_list
+			index_chk = list1.index(str(user))
+			await ctx.send(f"⚠️ User already exist")
+		except:
+			bot.whitelist_list.append(str(user))
+			await ctx.send(f"☑️ Added **{user}** to whilelist")
+	else:
+		await ctx.send("Developer Mode is OFF ❎")
+
+@bot.command()
+async def whitelist_del(ctx, user: discord.Member):
+	if bot.devmode == 1:
+		try:
+			bot.whitelist_list.remove(str(user))
+			await ctx.send(f"❎ Removed **{user}** from whilelist")
+		except:
+			list1 = bot.whitelist_list
+			index_chk = list1.index(str(user))
+			await ctx.send(f"⚠️ User does not exist")
+			
+	else:
+		await ctx.send("Developer Mode is OFF ❎")
+
+@bot.command()
+async def whitelist_check(ctx):
+	list_size = len(bot.whitelist_list)
+	if list_size == 0:
+		await ctx.send("ℹ️ Whitelist has empty")
+	else:
+		embed_check = ""
+
+		for i in range(list_size):
+			num_title = i+1
+			#await ctx.send(f"{num_title}.{bot.whitelist_list[i]}")
+			embed_check += f"{num_title}.{bot.whitelist_list[i]}\n"
+
+		show = discord.Embed(title = "ℹ️ **Whitelist**", color = 0x00FF00)
+		show.description = embed_check
+
+		await ctx.send(embed = show)
+
+@bot.command()
+async def moderator(ctx):
+	user = ctx.message.author
+	bot.user_name = user
+	role = discord.utils.get(user.guild.roles, name="Moderator")
+	await user.add_roles(role)
+
+	bot.timer_moderator = 86399
+	day = int(bot.timer_moderator / 86400)
+	sade = int(bot.timer_moderator % 86400)
+	hour = int(sade / 3600)
+	sade2 = int(sade % 3600)
+	minute = int(sade2 / 60)
+	second = int(sade2 % 60)
+
+	#ปรับขนาดตัวอักษร
+	day_str = str(day)
+	hour_str = str(hour)
+	minute_str = str(minute)
+	second_str = str(second)
+
+	hour_zfill = hour_str.zfill(2)
+	minute_zfill = minute_str.zfill(2)
+	second_zfill = second_str.zfill(2)
+
+	await ctx.send(f"✅ **{user}** are moderator now")
+	await ctx.send(f"ℹ️ **{user}** can use <#827531528157659226>")
+	message = await ctx.send(f"⚠️ **{hour_zfill}:{minute_zfill}:{second_zfill}** before the license expires")
+
+	while bot.timer_moderator >= 0:
+		day = int(bot.timer_moderator / 86400)
+		sade = int(bot.timer_moderator % 86400)
+		hour = int(sade / 3600)
+		sade2 = int(sade % 3600)
+		minute = int(sade2 / 60)
+		second = int(sade2 % 60)
+
+		#ปรับขนาดตัวอักษร
+		day_str = str(day)
+		hour_str = str(hour)
+		minute_str = str(minute)
+		second_str = str(second)
+
+		hour_zfill = hour_str.zfill(2)
+		minute_zfill = minute_str.zfill(2)
+		second_zfill = second_str.zfill(2)
+
+				
+		await message.edit(content=f"⚠️ **{hour_zfill}:{minute_zfill}:{second_zfill}** before the license expires")
+		await asyncio.sleep(1)
+		bot.timer_moderator -= 1
+
+	if bot.timer_moderator <= 1 and bot.timer_moderator >= -3:
+		await user.remove_roles(role)
+		await message.edit(content="⛔ **License expired**")
+
+	elif bot.timer_moderator < -5:
+		await user.remove_roles(role)
+		await message.edit(content="🛑 **License canceled**")
+
+@bot.command()			
+async def cancel_mod(ctx):
+	bot.timer_moderator = -1020304
+	await ctx.send(f"⛔** {bot.user_name}** has left as a moderator")
+
+
+@bot.command()
+async def privatekey(ctx, user: discord.Member):
+	author = str(ctx.message.author)
+	list1 = bot.whitelist_list
+
+	if author in list1:
+		bot.user_name_privatekey = user
+		role = discord.utils.get(user.guild.roles, name="PrivateKey")
+		await user.add_roles(role)
+
+		bot.timer_private = 86399
+		day = int(bot.timer_private / 86400)
+		sade = int(bot.timer_private % 86400)
+		hour = int(sade / 3600)
+		sade2 = int(sade % 3600)
+		minute = int(sade2 / 60)
+		second = int(sade2 % 60)
+
+		#ปรับขนาดตัวอักษร
+		day_str = str(day)
+		hour_str = str(hour)
+		minute_str = str(minute)
+		second_str = str(second)
+
+		hour_zfill = hour_str.zfill(2)
+		minute_zfill = minute_str.zfill(2)
+		second_zfill = second_str.zfill(2)
+
+		await ctx.send(f"✅ **{user}** can use <#681876532834205721>")
+		message = await ctx.send(f"ℹ️ **{hour_zfill}:{minute_zfill}:{second_zfill}** before the PrivateKey expires")
+
+		while bot.timer_private >= 0:
+			day = int(bot.timer_private / 86400)
+			sade = int(bot.timer_private % 86400)
+			hour = int(sade / 3600)
+			sade2 = int(sade % 3600)
+			minute = int(sade2 / 60)
+			second = int(sade2 % 60)
+
+			#ปรับขนาดตัวอักษร
+			day_str = str(day)
+			hour_str = str(hour)
+			minute_str = str(minute)
+			second_str = str(second)
+
+			hour_zfill = hour_str.zfill(2)
+			minute_zfill = minute_str.zfill(2)
+			second_zfill = second_str.zfill(2)
+
+				
+			await message.edit(content=f"ℹ️ **{hour_zfill}:{minute_zfill}:{second_zfill}** before the PrivateKey expires")
+			await asyncio.sleep(1)
+			bot.timer_private -= 1
+
+		if bot.timer_private <= 1 and bot.timer_private >= -3:
+			await user.remove_roles(role)
+			await message.edit(content="⛔ **PrivateKey expired**")
+
+		elif bot.timer_private < -5:
+			await user.remove_roles(role)
+			await message.edit(content="🛑 **PrivateKey canceled**")
+	else:
+		await ctx.send(f"❎ **{author}** are not on the whitelist.")
+
+@bot.command()			
+async def cancel_privatekey(ctx):
+	list1 = bot.whitelist_list
+	author = str(ctx.message.author)
+	if author in list1:
+		bot.timer_private = -1020304
+		await ctx.send(f"⛔ All PrivateKey have been canceled")
+	else:
+		await ctx.send(f"❎ **{author}** are not on the whitelist.")
 
 
 # Events
@@ -413,14 +605,14 @@ async def status(ctx, text: str):
 
 @bot.event
 async def on_ready():
-	await bot.change_presence(activity=discord.Game(name="Version 1.3.1"))
+	await bot.change_presence(activity=discord.Game(name="Version 1.4.0"))
 	print('Started!')
 
 
 @bot.event
 async def on_raw_reaction_add(payload):
 	message_id = payload.message_id
-	if message_id == 815987372646334475:
+	if message_id == 851064004264329266:
 		guild_id = payload.guild_id
 		guild = discord.utils.find(lambda g : g.id == guild_id, bot.guilds)
 
@@ -449,17 +641,17 @@ async def on_raw_reaction_add(payload):
 		elif payload.emoji.name == '12_':
 			role = discord.utils.get(guild.roles, name = 'Roblox')
 		elif payload.emoji.name == '13_':
-			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ503')
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ603')
 		elif payload.emoji.name == '14_':
-			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ505')
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ604')
 		elif payload.emoji.name == '15_':
-			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ509')
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ605')
 		elif payload.emoji.name == '16_':
-			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ510')
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ609')
 		elif payload.emoji.name == '17_':
-			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ511')
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ610')
 		elif payload.emoji.name == '18_':
-			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ512')
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ611')
 		elif payload.emoji.name == '19_':
 			role = discord.utils.get(guild.roles, name = 'นักตัดงานคุณภาพ')
 		elif payload.emoji.name == '20_':
@@ -482,7 +674,7 @@ async def on_raw_reaction_add(payload):
 @bot.event
 async def on_raw_reaction_remove(payload):
 	message_id = payload.message_id
-	if message_id == 815987372646334475:
+	if message_id == 851064004264329266:
 		guild_id = payload.guild_id
 		guild = discord.utils.find(lambda g : g.id == guild_id, bot.guilds)
 
@@ -511,17 +703,17 @@ async def on_raw_reaction_remove(payload):
 		elif payload.emoji.name == '12_':
 			role = discord.utils.get(guild.roles, name = 'Roblox')
 		elif payload.emoji.name == '13_':
-			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ503')
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ603')
 		elif payload.emoji.name == '14_':
-			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ505')
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ604')
 		elif payload.emoji.name == '15_':
-			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ509')
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ605')
 		elif payload.emoji.name == '16_':
-			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ510')
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ609')
 		elif payload.emoji.name == '17_':
-			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ511')
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ610')
 		elif payload.emoji.name == '18_':
-			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ512')
+			role = discord.utils.get(guild.roles, name = 'SKR#24ㅣ611')
 		elif payload.emoji.name == '19_':
 			role = discord.utils.get(guild.roles, name = 'นักตัดงานคุณภาพ')
 		elif payload.emoji.name == '20_':
