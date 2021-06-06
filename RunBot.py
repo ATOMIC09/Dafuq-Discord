@@ -612,7 +612,7 @@ async def on_ready():
 @bot.event
 async def on_raw_reaction_add(payload):
 	message_id = payload.message_id
-	if message_id == 851064004264329266:
+	if message_id == 851097526203711559:
 		guild_id = payload.guild_id
 		guild = discord.utils.find(lambda g : g.id == guild_id, bot.guilds)
 
@@ -674,7 +674,7 @@ async def on_raw_reaction_add(payload):
 @bot.event
 async def on_raw_reaction_remove(payload):
 	message_id = payload.message_id
-	if message_id == 851064004264329266:
+	if message_id == 851097526203711559:
 		guild_id = payload.guild_id
 		guild = discord.utils.find(lambda g : g.id == guild_id, bot.guilds)
 
