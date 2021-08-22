@@ -757,21 +757,7 @@ async def on_member_join(person):
 # Listen
 @bot.listen()
 async def on_message(message):
-	if "สวัสดี" in message.content.lower():
-		if message.author.id == bot.user.id:
-			return
-		if message.author.id == 778302031042576395:
-			return
-		await message.channel.send('สวัสดี 🙏😀')
-
-	elif "หวัดดี" in message.content.lower():
-		if message.author.id == bot.user.id:
-			return
-		if message.author.id == 778302031042576395:
-			return
-		await message.channel.send('หวัดดี 🙏😀')
-
-	elif "ยินดีด้วย" in message.content.lower():
+	if "ยินดีด้วย" in message.content.lower():
 		await message.channel.send('ขอแสดงความยินดี! 🎉🎉')
 
 	elif "congratulation" in message.content.lower():
