@@ -16,54 +16,6 @@ bot = commands.Bot(command_prefix='&', description="พูดมากว่ะ"
 bot.remove_command('help')
 
 
-# COVID COMMAND
-stat_url = "https://covid19.th-stat.com/api/open/"
-
-emo = {
-	"blank" : '<:pai__blank:775679312619634698>',
-	"up_red" : '<:pai__up_red:775694925941047316>',
-	"up_green" : '<:pai__up_green:775694925924794368>',
-	"down_red" : '<:pai__down_red:775694925748633651>',
-	"down_green" : '<:pai__down_green:775694925844840479>'
-}
-
-async def covid_stat(ctx, minimal=False) :
-	response = requests.get(stat_url + "today")
-	data = response.json()
-	datestr = data["UpdateDate"]
-	dataformat = {
-		"Confirmed" : ('mask', False),
-		"Deaths" : ('skull', False),
-		"Recovered" : ('sparkling_heart', True),
-		"Hospitalized" : ('hospital', False)
-	}
-
-	blank_emoji = emo["blank"]
-	def digits_gen(number, max_length, symbol=False, positive=True) :
-		numstr = ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
-		if symbol :
-			resstr = emo[((("up_green" if number > 0 else "down_red") if positive else ("up_red" if number > 0 else "down_green"))) if number != 0 else "blank"]
-		else :	
-			resstr = ""
-		number = str(abs(number))
-		if len(number) < max_length :
-			resstr += blank_emoji * (max_length - len(number))
-		for c in number :
-			resstr += ':{}:'.format(numstr[int(c)])
-		return resstr
-
-	tempstr = ":{}:{}{}"
-	title = f"รายงานสถานการณ์ COVID-19 ในประเทศไทย\n {datestr}"
-	c = discord.Embed(title = f"**{title}**", color = 0x00FF00)
-	await ctx.send(embed = c)
-	final = [tempstr.format(dataformat[topic][0], blank_emoji + digits_gen(data[topic], max([len(str(abs(data[c]))) for c in list(dataformat.keys())])) + blank_emoji, digits_gen(data["New"+topic], max([len(str(abs(data["New"+c]))) for c in list(dataformat.keys())]), True, dataformat[topic][1])) for topic in list(dataformat.keys())]
-	if minimal :
-		await ctx.send("\n".join(final))
-	else :
-		for f in final :
-			await ctx.send(f)
-
-
 # Math
 @bot.command()
 async def sum(ctx, numOne: float, numTwo: float):
@@ -125,7 +77,7 @@ async def devmode_on(ctx):
 	if bot.devmode == 0 and 269000561255383040 == ctx.message.author.id:
 		bot.devmode += 1
 		await ctx.send("**DevMode: ON ✅**")
-		await bot.change_presence(activity=discord.Game(name="Version: Dev 1.4.1"))
+		await bot.change_presence(activity=discord.Game(name="Version: Dev 1.4.2"))
 		
 	elif 269000561255383040 != ctx.message.author.id:
 		await ctx.send("**You are not a developer**")
@@ -138,7 +90,7 @@ async def devmode_off(ctx):
 	if bot.devmode == 1 and 269000561255383040 == ctx.message.author.id:
 		bot.devmode -= 1
 		await ctx.send("**DevMode: OFF ❎**")
-		await bot.change_presence(activity=discord.Game(name="Version: 1.4.1"))
+		await bot.change_presence(activity=discord.Game(name="Version: 1.4.2"))
 
 	elif 269000561255383040 != ctx.message.author.id:
 		await ctx.send("**You are not a developer**")
@@ -170,6 +122,7 @@ async def update(ctx):
 	u.add_field(name="6️⃣ V.1.3.1 | 29/04/2021", value="`• Add: &devmode\n• Add: &status\n• Fix: Activity Name\n• Fix: &countdown`")
 	u.add_field(name="7️⃣ V.1.4.0 | 06/06/2021", value="`• Add: PrivateKey Role assignment\n• Add: Moderator Role assignment\n• Add: Whitelist\n• Fix: Role Name`")
 	u.add_field(name="8️⃣ V.1.4.1 | 22/08/2021", value="`• Delete: Some auto detection word`")
+	u.add_field(name="9️⃣ V.1.4.2 | 06/09/2021", value="`• Add: Mute Command\n• Delete: All Whilelist Commands\n• Delete: All Covid Commands`")
 	await ctx.send(embed = u)
 
 @bot.command()
@@ -192,10 +145,12 @@ async def help(ctx):
 	h.add_field(name="✂ ลบรายชื่อ Whitelist", value="`&whitelist_del [@USER]`")
 	h.add_field(name="📐 สร้างสามเหลี่ยมมุมฉาก", value="`&right_triangle [จำนวนชั้น]`")
 	h.add_field(name="🔄 แปลงหน่วยอุณหภูมิ", value="`&help_temp`")
-	h.add_field(name="😷 ตรวจสอบสถานการณ์ไวรัส COVID-19", value="`&covid`")
 	h.add_field(name="🔄 แปลงเปอร์เซ็นต์และตัวเลข", value="`&help_percent`")
 	h.add_field(name="🚀 โปรแกรมยิงไอพี DDoS Tool", value="`&ddosins`")
 	h.add_field(name="🎆 ประกาศอีเวนต์", value="`&event [ID]|[ชื่อ]|[คำอธิบาย]|[LOGO URL]`")
+	h.add_field(name="🔄 แปลงหน่วยอุณหภูมิ", value="`&help_temp`")
+	h.add_field(name="🔇 ปิดเสียงสมาชิก", value="`&mute [@USER] [Time]`")
+	h.add_field(name="🔊 ยกเลิกการปิดเสียง", value="`&unmute [@USER]`")
 	await ctx.send(embed = h)
 
 @bot.command()
@@ -267,16 +222,6 @@ async def ftk(ctx, tempf: float):
 @bot.command()
 async def ktf(ctx, tempk: float):
 	await ctx.send(str("{:.2f}".format((((tempk-273)*9)/5)+32) + ' °F'))
-
-
-@bot.command()
-async def covid(ctx) :
-	is_on_mobile = getattr(ctx.message.author, "is_on_mobile", None)
-	if callable(is_on_mobile) :
-		await covid_stat(ctx, is_on_mobile())
-		return
-	else :
-		await covid_stat(ctx)
 
 
 @bot.command()
@@ -605,6 +550,34 @@ async def cancel_privatekey(ctx):
 	else:
 		await ctx.send(f"❎ **{author}** are not on the whitelist.")
 
+# Mute
+bot.mute_cancel_code = 0
+@bot.command()
+async def mute(ctx, user: discord.Member, time: int):
+	role_mute = discord.utils.get(user.guild.roles, name="Muted")
+	
+	await user.add_roles(role_mute)
+	await ctx.send(f"**{user}** has been muted for {time} second ⛔")
+	bot.mute_cancel_code == 0
+	await asyncio.sleep(time)
+
+	if bot.mute_cancel_code == 0:
+		await user.remove_roles(role_mute)
+		await ctx.send(f"**{user}** has been unmuted ✅")
+	else:
+		bot.mute_cancel_code = 0
+		return
+
+@bot.command()
+async def unmute(ctx, user: discord.Member):
+	role_mute = discord.utils.get(user.guild.roles, name="Muted")
+	try:
+		await user.remove_roles(role_mute)
+		bot.mute_cancel_code = 1
+		await ctx.send(f"**{user}** has been unmuted ✅")
+	except:
+		await ctx.send(f"**{user}** is not muted ⚠️")
+
 
 # Events
 @bot.command()
@@ -617,7 +590,7 @@ async def status(ctx, text: str):
 
 @bot.event
 async def on_ready():
-	await bot.change_presence(activity=discord.Game(name="Version 1.4.1"))
+	await bot.change_presence(activity=discord.Game(name="Version 1.4.2"))
 	print('Started!')
 
 
