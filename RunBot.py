@@ -7,6 +7,11 @@ from time import sleep
 import math
 import os
 import asyncio
+from discord import FFmpegPCMAudio
+from discord import TextChannel
+from youtube_dl import YoutubeDL
+from dotenv import load_dotenv
+from discord.utils import get
 
 
 intents = discord.Intents.default()
