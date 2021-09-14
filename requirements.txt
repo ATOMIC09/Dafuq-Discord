@@ -2,3 +2,4 @@ discord.py==1.5.1
 requests
 python-dotenv==0.10.1
 youtube_dl
+PyNaCl==1.4.1
