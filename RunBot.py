@@ -82,7 +82,7 @@ async def devmode_on(ctx):
 	if bot.devmode == 0 and 269000561255383040 == ctx.message.author.id:
 		bot.devmode += 1
 		await ctx.send("**DevMode: ON ✅**")
-		await bot.change_presence(activity=discord.Game(name="Version: Dev 1.4.2"))
+		await bot.change_presence(activity=discord.Game(name="Version: Dev 1.4.3"))
 		
 	elif 269000561255383040 != ctx.message.author.id:
 		await ctx.send("**You are not a developer**")
@@ -95,7 +95,7 @@ async def devmode_off(ctx):
 	if bot.devmode == 1 and 269000561255383040 == ctx.message.author.id:
 		bot.devmode -= 1
 		await ctx.send("**DevMode: OFF ❎**")
-		await bot.change_presence(activity=discord.Game(name="Version: 1.4.2"))
+		await bot.change_presence(activity=discord.Game(name="Version: 1.4.3"))
 
 	elif 269000561255383040 != ctx.message.author.id:
 		await ctx.send("**You are not a developer**")
@@ -127,7 +127,8 @@ async def update(ctx):
 	u.add_field(name="6️⃣ V.1.3.1 | 29/04/2021", value="`• Add: &devmode\n• Add: &status\n• Fix: Activity Name\n• Fix: &countdown`")
 	u.add_field(name="7️⃣ V.1.4.0 | 06/06/2021", value="`• Add: PrivateKey Role assignment\n• Add: Moderator Role assignment\n• Add: Whitelist\n• Fix: Role Name`")
 	u.add_field(name="8️⃣ V.1.4.1 | 22/08/2021", value="`• Delete: Some auto detection word`")
-	u.add_field(name="9️⃣ V.1.4.2 | 06/09/2021", value="`• Add: Mute Command\n• Delete: All Whilelist Commands\n• Delete: All Covid Commands`")
+	u.add_field(name="9️⃣ V.1.4.2 | 06/09/2021", value="`• Add: Mute Command\n• Delete: All Covid Commands`")
+	u.add_field(name="🔟 V.1.4.3 | 14/09/2021", value="`• Add: Music Command`")
 	await ctx.send(embed = u)
 
 @bot.command()
@@ -156,6 +157,7 @@ async def help(ctx):
 	h.add_field(name="🔄 แปลงหน่วยอุณหภูมิ", value="`&help_temp`")
 	h.add_field(name="🔇 ปิดเสียงสมาชิก", value="`&mute [@USER] [Time]`")
 	h.add_field(name="🔊 ยกเลิกการปิดเสียง", value="`&unmute [@USER]`")
+	h.add_field(name="🎵 เพลง", value="`&help_music`")
 	await ctx.send(embed = h)
 
 @bot.command()
@@ -187,6 +189,17 @@ async def help_percent(ctx):
 	pn.add_field(name="เปอร์เซ็นต์เป็นตัวเลข", value="`&ptn [%] [Total]`")
 	pn.add_field(name="ตัวเลขเป็นเปอร์เซ็นต์", value="`&ntp [Number] [Total]`")
 	await ctx.send(embed = pn)
+
+@bot.command()
+async def help_music(ctx):
+	m = discord.Embed(title = "🎵 **เพลง**", color = 0x00FF00)
+	m.add_field(name="เรียกบอท", value="`&summon`")
+	m.add_field(name="เตะบอท", value="`&dis`")
+	m.add_field(name="เปิดเพลง", value="`&play [URL]`")
+	m.add_field(name="พัก", value="`&pause`")
+	m.add_field(name="เล่นต่อ", value="`&resume`")
+	m.add_field(name="หยุด", value="`&stop`")
+	await ctx.send(embed = m)
 
 @bot.command()
 async def guild(ctx):
@@ -675,7 +688,7 @@ async def status(ctx, text: str):
 
 @bot.event
 async def on_ready():
-	await bot.change_presence(activity=discord.Game(name="Version 1.4.2"))
+	await bot.change_presence(activity=discord.Game(name="Version 1.4.3"))
 	print('Started!')
 
 
