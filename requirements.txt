@@ -1,4 +1,4 @@
 discord.py==1.5.1
 requests
-python-dotenv
+python-dotenv==0.10.1
 youtube_dl
