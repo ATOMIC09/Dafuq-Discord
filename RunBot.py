@@ -128,7 +128,7 @@ async def update(ctx):
 	u.add_field(name="7️⃣ V.1.4.0 | 06/06/2021", value="`• Add: PrivateKey Role assignment\n• Add: Moderator Role assignment\n• Add: Whitelist\n• Fix: Role Name`")
 	u.add_field(name="8️⃣ V.1.4.1 | 22/08/2021", value="`• Delete: Some auto detection word`")
 	u.add_field(name="9️⃣ V.1.4.2 | 06/09/2021", value="`• Add: Mute Command\n• Delete: All Covid Commands`")
-	u.add_field(name="🔟 V.1.4.3 | 14/09/2021", value="`• Add: Music Command`")
+	u.add_field(name="🔟 V.1.4.3 | 14/09/2021", value="`• Add: Music Command\n• Add: Youtube Downloader`")
 	await ctx.send(embed = u)
 
 @bot.command()
@@ -158,6 +158,7 @@ async def help(ctx):
 	h.add_field(name="🔇 ปิดเสียงสมาชิก", value="`&mute [@USER] [Time]`")
 	h.add_field(name="🔊 ยกเลิกการปิดเสียง", value="`&unmute [@USER]`")
 	h.add_field(name="🎵 เพลง", value="`&help_music`")
+	h.add_field(name="📩 Youtube Downloader", value="`&yt [URL]`")
 	await ctx.send(embed = h)
 
 @bot.command()
@@ -656,6 +657,9 @@ async def p(ctx, url: str):
 				await ctx.send("หยุดเล่น") # บอก
 				bot.check_code = 1 # ไม่ต้องเล่นต่อ
 
+@bot.command()
+async def loop(ctx):
+	await ctx.send("**แค่เปลี่ยนเพลงอัตโนมัติยังทำไม่ได้เลย**")
 
 @bot.command()
 async def q(ctx):
@@ -705,6 +709,26 @@ async def stop(ctx):
     if voice.is_playing():
         voice.stop()
         await ctx.send('Stop ⏹')
+
+# Youtube Downloader
+@bot.command()
+async def yt(ctx, url: str):
+	# ประกาศสิ่งที่จำเป็น
+	AUDIO_YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True'}
+	VIDEO_YDL_OPTIONS = {'format': 'best'}
+
+	with YoutubeDL(AUDIO_YDL_OPTIONS) as ydl:
+		info = ydl.extract_info(url, download=False)
+	AUDIO_DOWNLOAD = info['url']
+
+	with YoutubeDL(VIDEO_YDL_OPTIONS) as ydl:
+		info = ydl.extract_info(url, download=False)
+	VIDEO_DOWNLOAD = info['url']
+
+	d = discord.Embed(title = "**Youtube Downloader**", color = 0xFF0000)
+	d.add_field(name=f"**Audio** :musical_note:", value=f"[🔽]({AUDIO_DOWNLOAD})")
+	d.add_field(name=f"**Video** :film_frames:", value=f"[🔽]({VIDEO_DOWNLOAD})")
+	await ctx.send(embed = d)
 
 
 # Events
