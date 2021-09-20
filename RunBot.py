@@ -638,7 +638,7 @@ async def p(ctx, url: str):
 		with YoutubeDL(YDL_OPTIONS) as ydl:
 			info = ydl.extract_info(queue[0], download=False)
 		URL = info['url']
-		voice.play(discord.FFmpegPCMAudio(executable="A:/Documents/GitHub/DafuqFinalTest/ffmpeg.exe",source=URL, **FFMPEG_OPTIONS))
+		voice.play(discord.FFmpegPCMAudio(source=URL, **FFMPEG_OPTIONS))
 		bot.check_code = int(voice.is_playing()) # เซตเป็น 1 เพราะกำลังเล่น
 			
 		# ส่งข้อความกลับ
@@ -674,7 +674,7 @@ async def s(ctx):
 	with YoutubeDL(YDL_OPTIONS) as ydl:
 		info = ydl.extract_info(queue[bot.playlist], download=False)
 	URL = info['url']
-	voice.play(discord.FFmpegPCMAudio(executable="A:/Documents/GitHub/DafuqFinalTest/ffmpeg.exe",source=URL, **FFMPEG_OPTIONS))
+	voice.play(discord.FFmpegPCMAudio(source=URL, **FFMPEG_OPTIONS))
 	voice.is_playing()
 	queue.pop(0)
 
