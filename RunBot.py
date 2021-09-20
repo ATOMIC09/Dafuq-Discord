@@ -195,7 +195,7 @@ async def help_music(ctx):
 	m = discord.Embed(title = "🎵 **เพลง**", color = 0x00FF00)
 	m.add_field(name="เรียกบอท", value="`&summon`")
 	m.add_field(name="เตะบอท", value="`&dis`")
-	m.add_field(name="เปิดเพลง", value="`&play [URL]`")
+	m.add_field(name="เปิดเพลง", value="`&p [URL]`")
 	m.add_field(name="พัก", value="`&pause`")
 	m.add_field(name="เล่นต่อ", value="`&resume`")
 	m.add_field(name="หยุด", value="`&stop`")
@@ -611,47 +611,77 @@ async def dis(ctx):
 	voice_client = ctx.guild.voice_client
 	await voice_client.disconnect()
 
+queue = []
+bot.check_code = 0
 
 @bot.command()
-async def play(ctx, url):
-	try:
-		channel = ctx.message.author.voice.channel
-		await channel.connect()
-		YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True'}
-		FFMPEG_OPTIONS = {
-			'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-		voice = get(bot.voice_clients, guild=ctx.guild)
+async def p(ctx, url: str):
+	# ประกาศสิ่งที่จำเป็น
+	channel = ctx.message.author.voice.channel
+	voice = get(bot.voice_clients, guild=ctx.guild)
+	YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True'}
+	FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
+	
+	# เช็คว่าอยู่ใน Voice Channel ไหม
+	if voice and voice.is_connected():
+		await voice.move_to(channel)
+	else:
+		voice = await channel.connect()
 
-		if not voice.is_playing():
-			with YoutubeDL(YDL_OPTIONS) as ydl:
-				info = ydl.extract_info(url, download=False)
-			URL = info['url']
-			voice.play(discord.FFmpegPCMAudio(source=URL, **FFMPEG_OPTIONS))
-			voice.is_playing()
-			await ctx.send('Bot is playing ✅')
+	queue.append(url) # เก็บทุกเพลงไว้ในคิว
 
-		else:
-			await ctx.send("Bot is already playing ℹ️")
-			return
+	# Check ว่าเล่นอยู่ไหม
+	bot.check_code = int(voice.is_playing())
 
-	except:
-		YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True'}
-		FFMPEG_OPTIONS = {
-			'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-		voice = get(bot.voice_clients, guild=ctx.guild)
+	while bot.check_code == 0: # ถ้าเพลงไม่ได้เล่นก็ให้เล่น
+		# เล่นเพลง
+		with YoutubeDL(YDL_OPTIONS) as ydl:
+			info = ydl.extract_info(queue[0], download=False)
+		URL = info['url']
+		voice.play(discord.FFmpegPCMAudio(executable="A:/Documents/GitHub/DafuqFinalTest/ffmpeg.exe",source=URL, **FFMPEG_OPTIONS))
+		bot.check_code = int(voice.is_playing()) # เซตเป็น 1 เพราะกำลังเล่น
+			
+		# ส่งข้อความกลับ
+		m = discord.Embed(title = "🎵 **Music** ", color = 0x00FF00)
+		m.add_field(name="✅ **Now Playing** ", value=f"**{queue[0]}**")
+		await ctx.send(embed = m)
 
-		if not voice.is_playing():
-			with YoutubeDL(YDL_OPTIONS) as ydl:
-				info = ydl.extract_info(url, download=False)
-			URL = info['url']
-			voice.play(discord.FFmpegPCMAudio(source=URL, **FFMPEG_OPTIONS))
-			voice.is_playing()
-			await ctx.send('Bot is playing ✅')
+		while bot.check_code == 1: # ตอนที่มันเล่น
+			try:
+				if "http" in queue[0]: # ถ้าเจอเพลงแรก
+					bot.check_code = 0 # ให้เล่นต่อ
+					queue.pop(0) # ลบคิวเพลงแรก ทำยังไงให้ลบทีหลังดี
 
-		else:
-			await ctx.send("Bot is already playing ℹ️")
-			return
+			except: # ถ้าไม่เจอเพลง (Index Error)
+				await ctx.send("หยุดเล่น") # บอก
+				bot.check_code = 1 # ไม่ต้องเล่นต่อ
 
+
+@bot.command()
+async def q(ctx):
+	m = discord.Embed(title = "**Status**", color = 0xFF0000)
+	m.add_field(name=f"**Queue**", value=f"{queue}")
+	m.add_field(name=f"**Check Code**", value=f"{bot.check_code}")
+	await ctx.send(embed = m)
+
+@bot.command()
+async def s(ctx):
+	voice = get(bot.voice_clients, guild=ctx.guild)
+	YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist': 'True'}
+	FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
+
+	voice.stop()
+	with YoutubeDL(YDL_OPTIONS) as ydl:
+		info = ydl.extract_info(queue[bot.playlist], download=False)
+	URL = info['url']
+	voice.play(discord.FFmpegPCMAudio(executable="A:/Documents/GitHub/DafuqFinalTest/ffmpeg.exe",source=URL, **FFMPEG_OPTIONS))
+	voice.is_playing()
+	queue.pop(0)
+
+@bot.command()
+async def c(ctx):
+	queue.clear()
+	
 @bot.command()
 async def resume(ctx):
     voice = get(bot.voice_clients, guild=ctx.guild)
