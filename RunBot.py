@@ -152,7 +152,7 @@ async def help(ctx):
 	h.add_field(name="📐 สร้างสามเหลี่ยมมุมฉาก", value="`&right_triangle [จำนวนชั้น]`")
 	h.add_field(name="🔄 แปลงหน่วยอุณหภูมิ", value="`&help_temp`")
 	h.add_field(name="🔄 แปลงเปอร์เซ็นต์และตัวเลข", value="`&help_percent`")
-	h.add_field(name="🚀 โปรแกรมยิงไอพี DDoS Tool", value="`&ddosins`")
+	h.add_field(name="🚀 โปรแกรมยิงไอพี DDoS GUI", value="`&ddosins`")
 	h.add_field(name="🎆 ประกาศอีเวนต์", value="`&event [ID]|[ชื่อ]|[คำอธิบาย]|[LOGO URL]`")
 	h.add_field(name="🔄 แปลงหน่วยอุณหภูมิ", value="`&help_temp`")
 	h.add_field(name="🔇 ปิดเสียงสมาชิก", value="`&mute [@USER] [Time]`")
@@ -264,9 +264,9 @@ async def ntp(ctx, number:float, total:float):
 
 @bot.command()
 async def ddosins(ctx):
-	ddos = discord.Embed(title = "🚀 **DDoS Tool V1.0**", color = 0x00FF00)
-	ddos.description ="[DOWNLOAD](https://drive.google.com/u/0/uc?export=download&confirm=Qu7_&id=1McyRQuqqqsDYstMCSP2gzCKn7cHt8jgx)"
-	ddos.set_thumbnail(url="https://cdn.discordapp.com/attachments/778868879567880192/781516216987680788/DDoS_LOGO.jpg")
+	ddos = discord.Embed(title = "🚀 **DDoS GUI V1.0**", color = 0x00FF00)
+	ddos.description ="[DOWNLOAD](https://doc-0k-c4-docs.googleusercontent.com/docs/securesc/gtjehdcv2nv2t7ff1pb6d6umf7fmogqt/6staak50bsgco407gg5qj121dtev479e/1634046750000/17784149850273364399/17784149850273364399/1vxwCJrkohcPeRhfgcgvf9dr5crjetu00?e=download&authuser=0&nonce=ul5oq0f4bpvbq&user=17784149850273364399&hash=2rntheal8bu5tpafdpdk0fh8mgof4gr2)"
+	ddos.set_thumbnail(url="https://cdn.discordapp.com/attachments/778868879567880192/897482160892694569/DDoS_LOGO.png")
 	await ctx.send(embed = ddos)
 
 
