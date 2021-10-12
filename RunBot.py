@@ -266,7 +266,7 @@ async def ntp(ctx, number:float, total:float):
 async def ddosins(ctx):
 	ddos = discord.Embed(title = "🚀 **DDoS GUI V1.0**", color = 0x00FF00)
 	ddos.description ="[DOWNLOAD](https://doc-0k-c4-docs.googleusercontent.com/docs/securesc/gtjehdcv2nv2t7ff1pb6d6umf7fmogqt/6staak50bsgco407gg5qj121dtev479e/1634046750000/17784149850273364399/17784149850273364399/1vxwCJrkohcPeRhfgcgvf9dr5crjetu00?e=download&authuser=0&nonce=ul5oq0f4bpvbq&user=17784149850273364399&hash=2rntheal8bu5tpafdpdk0fh8mgof4gr2)"
-	ddos.set_thumbnail(url="https://cdn.discordapp.com/attachments/778868879567880192/897482160892694569/DDoS_LOGO.png")
+	ddos.set_thumbnail(url="https://cdn.discordapp.com/attachments/778868879567880192/781516216987680788/DDoS_LOGO.jpg")
 	await ctx.send(embed = ddos)
 
 
