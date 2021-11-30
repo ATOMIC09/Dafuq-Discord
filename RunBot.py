@@ -896,7 +896,7 @@ async def on_message(message):
 		await asyncio.sleep(2)
 		if message.author.id == bot.user.id:
 			return
-		d = discord.Embed(title = "**Warning**", color = 0xFF0000)
+		d = discord.Embed(title = "⚠ **Warning**", color = 0xFF0000)
 		d.description = "บอทนี้กำลังจะถูกยกเลิก โปรดใช้บอท Miura #7350 ในการใช้งานแทน 🙏🏻"
 		await message.channel.send(embed = d)
 
