@@ -742,7 +742,7 @@ async def status(ctx, text: str):
 
 @bot.event
 async def on_ready():
-	await bot.change_presence(activity=discord.Game(name="Last Version 1.4.3"))
+	await bot.change_presence(activity=discord.Game(name="LAST Version 1.4.3"))
 	print('Started!')
 
 
@@ -896,7 +896,7 @@ async def on_message(message):
 		if message.author.id == bot.user.id:
 			return
 		d = discord.Embed(title = "**Warning**", color = 0xFF0000)
-		d.description = "บอทนี้กำลังจะถูกยกเลิก โปรดให้ Miura ในการใช้งานแทน 🙏🏻"
+		d.description = "บอทนี้กำลังจะถูกยกเลิก โปรดใช้บอท Miura #7350 ในการใช้งานแทน 🙏🏻"
 		await message.send(embed = d)
 
 
