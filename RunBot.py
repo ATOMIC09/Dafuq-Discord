@@ -742,7 +742,7 @@ async def status(ctx, text: str):
 
 @bot.event
 async def on_ready():
-	await bot.change_presence(activity=discord.Game(name="Version 1.4.3"))
+	await bot.change_presence(activity=discord.Game(name="Last Version 1.4.3"))
 	print('Started!')
 
 
@@ -891,6 +891,13 @@ async def on_message(message):
 			return
 		await message.channel.send('CONGRATULATION! 🎉🎉')
 		await bot.process_commands(message)
+
+	elif "&" in message.content.lower():
+		if message.author.id == bot.user.id:
+			return
+		d = discord.Embed(title = "**Warning**", color = 0xFF0000)
+		d.description = "บอทนี้กำลังจะถูกยกเลิก โปรดให้ Miura ในการใช้งานแทน 🙏🏻"
+		await message.send(embed = d)
 
 
 Token = os.environ["DafuqToken"]
