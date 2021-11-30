@@ -897,7 +897,7 @@ async def on_message(message):
 			return
 		d = discord.Embed(title = "**Warning**", color = 0xFF0000)
 		d.description = "บอทนี้กำลังจะถูกยกเลิก โปรดใช้บอท Miura #7350 ในการใช้งานแทน 🙏🏻"
-		await message.send(embed = d)
+		await message.channel.send(embed = d)
 
 
 Token = os.environ["DafuqToken"]
