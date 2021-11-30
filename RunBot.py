@@ -893,6 +893,7 @@ async def on_message(message):
 		await bot.process_commands(message)
 
 	elif "&" in message.content.lower():
+		await asyncio.sleep(2)
 		if message.author.id == bot.user.id:
 			return
 		d = discord.Embed(title = "**Warning**", color = 0xFF0000)
