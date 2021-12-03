@@ -892,7 +892,9 @@ async def on_message(message):
 		await message.channel.send('CONGRATULATION! 🎉🎉')
 		await bot.process_commands(message)
 
-	elif "&" in message.content.lower():
+	txt = message.content.lower()
+	x = txt.startswith("&")
+	if x == True:
 		await asyncio.sleep(2)
 		if message.author.id == bot.user.id:
 			return
